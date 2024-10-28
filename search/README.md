@@ -1,19 +1,22 @@
 # Project 1: Search
+
 From the content in the original website related to the [search](https://ai.berkeley.edu/search.html) project.
 
 ### Table of Contents
-* [Introduction](#introduction)
-* [Welcome](#welcome-to-pacman)
-* [Q1: Depth First Search](#question-1-3-points-finding-a-fixed-food-dot-using-depth-first-search)
-* [Q2: Breadth First Search](#question-2-3-points-breadth-first-search)
-* [Q3: Uniform Cost Search](#question-3-3-points-varying-the-cost-function)
-* [Q4: A* Search](#question-4-3-points-a-search)
-* [Q5: Corners Problem: Representation](#question-5-3-points-finding-all-the-corners)
-* [Q6: Corners Problem: Heuristic](#question-6-3-points-corners-problem-heuristic)
-* [Q7: Eating All The Dots: Heuristic](#question-7-4-points-eating-all-the-dots)
-* [Q8: Suboptimal Search](#question-8-3-points-suboptimal-search)
+
+- [Introduction](#introduction)
+- [Welcome](#welcome-to-pacman)
+- [Q1: Depth First Search](#question-1-3-points-finding-a-fixed-food-dot-using-depth-first-search)
+- [Q2: Breadth First Search](#question-2-3-points-breadth-first-search)
+- [Q3: Uniform Cost Search](#question-3-3-points-varying-the-cost-function)
+- [Q4: A\* Search](#question-4-3-points-a-search)
+- [Q5: Corners Problem: Representation](#question-5-3-points-finding-all-the-corners)
+- [Q6: Corners Problem: Heuristic](#question-6-3-points-corners-problem-heuristic)
+- [Q7: Eating All The Dots: Heuristic](#question-7-4-points-eating-all-the-dots)
+- [Q8: Suboptimal Search](#question-8-3-points-suboptimal-search)
 
 ### Introduction
+
 In this project, your Pacman agent will find paths through his maze world, both to reach a particular location and to collect food efficiently. You will build general search algorithms and apply them to Pacman scenarios.
 
 As in Project 0, this project includes an autograder for you to grade your answers on your machine. This can be run with the command:
@@ -25,26 +28,26 @@ See the autograder tutorial in Project 0 for more information about using the au
 The code for this project consists of several Python files, some of which you will need to read and understand in order to complete the assignment, and some of which you can ignore. You can download all the code and supporting files as a zip archive.
 
 **Files you'll edit:**<br/>
-[search.py](https://github.com/aig-upf/pacman-projects/blob/main/search/search.py)	Where all of your search algorithms will reside.<br/>
+[search.py](https://github.com/aig-upf/pacman-projects/blob/main/search/search.py) Where all of your search algorithms will reside.<br/>
 [search_agents.py](https://github.com/aig-upf/pacman-projects/blob/main/search/search_agents.py) Where all of your search-based agents will reside. <br/>
 
 **Files you might want to look at:** <br/>
-[pacman.py](https://github.com/aig-upf/pacman-projects/blob/main/search/pacman.py)	The main file that runs Pacman games. This file describes a Pacman GameState type, which you use in this project.<br/>
-[game.py](https://github.com/aig-upf/pacman-projects/blob/main/search/game.py)	The logic behind how the Pacman world works. This file describes several supporting types like AgentState, Agent, Direction, and Grid.<br/>
-[util.py](https://github.com/aig-upf/pacman-projects/blob/main/search/util.py)	Useful data structures for implementing search algorithms.<br/>
+[pacman.py](https://github.com/aig-upf/pacman-projects/blob/main/search/pacman.py) The main file that runs Pacman games. This file describes a Pacman GameState type, which you use in this project.<br/>
+[game.py](https://github.com/aig-upf/pacman-projects/blob/main/search/game.py) The logic behind how the Pacman world works. This file describes several supporting types like AgentState, Agent, Direction, and Grid.<br/>
+[util.py](https://github.com/aig-upf/pacman-projects/blob/main/search/util.py) Useful data structures for implementing search algorithms.<br/>
 
 **Supporting files you can ignore:**<br/>
-[graphics_display.py](https://github.com/aig-upf/pacman-projects/blob/main/search/graphics_display.py)	Graphics for Pacman<br/>
-[graphics_utils.py](https://github.com/aig-upf/pacman-projects/blob/main/search/graphics_utils.py)	Support for Pacman graphics<br/>
-[text_display.py](https://github.com/aig-upf/pacman-projects/blob/main/search/text_display.py)	ASCII graphics for Pacman<br/>
-[ghost_agents.py](https://github.com/aig-upf/pacman-projects/blob/main/search/ghost_agents.py)	Agents to control ghosts<br/>
-[keyboard_agents.py](https://github.com/aig-upf/pacman-projects/blob/main/search/keyboard_agents.py)	Keyboard interfaces to control Pacman<br/>
-[layout.py](https://github.com/aig-upf/pacman-projects/blob/main/search/layout.py)	Code for reading layout files and storing their contents<br/>
-[autograder.py](https://github.com/aig-upf/pacman-projects/blob/main/search/autograder.py)	Project autograder<br/>
-[test_parser.py](https://github.com/aig-upf/pacman-projects/blob/main/search/test_parser.py)	Parses autograder test and solution files<br/>
-[test_classes.py](https://github.com/aig-upf/pacman-projects/blob/main/search/test_classes.py)	General autograding test classes<br/>
-[test_cases/](https://github.com/aig-upf/pacman-projects/tree/main/search/test_cases)	Directory containing the test cases for each question<br/>
-[search_test_classes.py](https://github.com/aig-upf/pacman-projects/blob/main/search/search_test_classes.py)	Project 1 specific autograding test classes<br/>
+[graphics_display.py](https://github.com/aig-upf/pacman-projects/blob/main/search/graphics_display.py) Graphics for Pacman<br/>
+[graphics_utils.py](https://github.com/aig-upf/pacman-projects/blob/main/search/graphics_utils.py) Support for Pacman graphics<br/>
+[text_display.py](https://github.com/aig-upf/pacman-projects/blob/main/search/text_display.py) ASCII graphics for Pacman<br/>
+[ghost_agents.py](https://github.com/aig-upf/pacman-projects/blob/main/search/ghost_agents.py) Agents to control ghosts<br/>
+[keyboard_agents.py](https://github.com/aig-upf/pacman-projects/blob/main/search/keyboard_agents.py) Keyboard interfaces to control Pacman<br/>
+[layout.py](https://github.com/aig-upf/pacman-projects/blob/main/search/layout.py) Code for reading layout files and storing their contents<br/>
+[autograder.py](https://github.com/aig-upf/pacman-projects/blob/main/search/autograder.py) Project autograder<br/>
+[test_parser.py](https://github.com/aig-upf/pacman-projects/blob/main/search/test_parser.py) Parses autograder test and solution files<br/>
+[test_classes.py](https://github.com/aig-upf/pacman-projects/blob/main/search/test_classes.py) General autograding test classes<br/>
+[test_cases/](https://github.com/aig-upf/pacman-projects/tree/main/search/test_cases) Directory containing the test cases for each question<br/>
+[search_test_classes.py](https://github.com/aig-upf/pacman-projects/blob/main/search/search_test_classes.py) Project 1 specific autograding test classes<br/>
 
 **Files to Edit and Submit:** You will fill in portions of search.py and search_agents.py during the assignment. You should submit these files with your code and comments. Please do not change the other files in this distribution or submit any of our original files other than these files.
 
@@ -57,6 +60,7 @@ The code for this project consists of several Python files, some of which you wi
 **Discussion:** Please be careful not to post spoilers.
 
 ### Welcome to Pacman
+
 After downloading the code ([pacman-projects-main.zip](https://github.com/aig-upf/pacman-projects/archive/refs/heads/main.zip)), unzipping it, and changing to the `search` directory, you should be able to play a game of Pacman by typing the following at the command line:
 
 `python pacman.py`
@@ -122,10 +126,11 @@ Does `BFS` find the least cost solution? If not, check your implementation.
 
 _Hint_: If Pacman moves too slowly for you, try the option `--frameTime 0`.
 
+error !! python pacman.py -l bigMaze -p SearchAgent -a fn=bfs -z 0.5 --frame_time 0
+
 _Note_: If you've written your search code generically, your code should work equally well for the eight-puzzle search problem without any changes.
 
 `python eightpuzzle.py`
-
 
 ### Question 3 (3 points): Varying the Cost Function
 
@@ -141,7 +146,7 @@ Implement the uniform-cost graph search algorithm in the `uniform_cost_search` f
 
 _Note_: You should get very low and very high path costs for the `StayEastSearchAgent` and `StayWestSearchAgent` respectively, due to their exponential cost functions (see `search_agents.py` for details).
 
-### Question 4 (3 points): A* search
+### Question 4 (3 points): A\* search
 
 Implement `A*` graph search in the empty function `a_star_search` in `search.py`. `A*` takes a heuristic function as an argument. Heuristics take two arguments: a state in the search problem (the main argument), and the problem itself (for reference information). The `null_heuristic` heuristic function in `search.py` is a trivial example.
 
@@ -150,7 +155,6 @@ You can test your `A*` implementation on the original problem of finding a path 
 `python pacman.py -l bigMaze -z .5 -p SearchAgent -a fn=astar,heuristic=manhattan_heuristic`
 
 You should see that `A*` finds the optimal solution slightly faster than uniform cost search (about 549 vs. 620 search nodes expanded in our implementation, but ties in priority may make your numbers differ slightly). What happens on openMaze for the various search strategies?
-
 
 ### Question 5 (3 points): Finding All the Corners
 
@@ -169,8 +173,7 @@ To receive full credit, you need to define an abstract state representation that
 
 _Hint_: The only parts of the game state you need to reference in your implementation are the starting Pacman position and the location of the four corners.
 
-Our implementation of `breadth_first_search` expands just under 2000 search nodes on `mediumCorners`. However, heuristics (used with A* search) can reduce the amount of searching required.
-
+Our implementation of `breadth_first_search` expands just under 2000 search nodes on `mediumCorners`. However, heuristics (used with A\* search) can reduce the amount of searching required.
 
 ### Question 6 (3 points): Corners Problem: Heuristic
 
@@ -192,18 +195,16 @@ Remember that admissibility isn't enough to guarantee correctness in graph searc
 
 **Grading:** Your heuristic must be a non-trivial non-negative consistent heuristic to receive any points. Make sure that your heuristic returns 0 at every goal state and never returns a negative value. Depending on how few nodes your heuristic expands, you'll be graded:
 
-
-| Number of nodes expanded | Grade|
-|--------------------------|------|
-| more than 2000           | 0/3  |
-| at most 2000             | 1/3  |
-| at most 1600             | 2/3  |
-| at most 1200             | 3/3  |
+| Number of nodes expanded | Grade |
+| ------------------------ | ----- |
+| more than 2000           | 0/3   |
+| at most 2000             | 1/3   |
+| at most 1600             | 2/3   |
+| at most 1200             | 3/3   |
 
 _Remember_: If your heuristic is inconsistent, you will receive _no_ credit, so be careful!
 
 ### Question 7 (4 points): Eating All The Dots
-
 
 Now we'll solve a hard search problem: eating all the Pacman food in as few steps as possible. For this, we'll need a new search problem definition which formalizes the food-clearing problem: `FoodSearchProblem` in `search_agents.py` (implemented for you). A solution is defined to be a path that collects all the food in the Pacman world. For the present project, solutions do not take into account any ghosts or power pellets; solutions only depend on the placement of walls, regular food and Pacman. (Of course ghosts can ruin the execution of a solution! We'll get to that in the next project.) If you have written your general search methods correctly, `A*` with a null heuristic (equivalent to uniform-cost search) should quickly find an optimal solution to `testSearch` with no code change on your part (total cost of 7).
 
@@ -224,7 +225,7 @@ Our `UCS` agent finds the optimal solution in about 13 seconds, exploring over 1
 Any non-trivial non-negative consistent heuristic will receive 1 point. Make sure that your heuristic returns 0 at every goal state and never returns a negative value. Depending on how few nodes your heuristic expands, you'll get additional points:
 
 | Number of nodes expanded | Grade                             |
-|--------------------------|-----------------------------------|
+| ------------------------ | --------------------------------- |
 | more than 15000          | 1/4                               |
 | at most 15000            | 2/4                               |
 | at most 12000            | 3/4                               |
@@ -232,7 +233,6 @@ Any non-trivial non-negative consistent heuristic will receive 1 point. Make sur
 | at most 7000             | 5/4 (optional extra credit; hard) |
 
 _Remember:_ If your heuristic is inconsistent, you will receive _no_ credit, so be careful! Can you solve `mediumMaze` in a short time? If so, we're either very, very impressed, or your heuristic is inconsistent.
-
 
 ### Question 8 (3 points): Suboptimal Search
 
@@ -247,4 +247,5 @@ _Hint:_ The quickest way to complete `find_path_to_closest_dot` is to fill in th
 Your `ClosestDotSearchAgent` won't always find the shortest possible path through the maze. Make sure you understand why and try to come up with a small example where repeatedly going to the closest dot does not result in finding the shortest path for eating all the dots.
 
 ### Submission
+
 You're not done yet! Follow your instructor's guidelines to receive credit on your project!

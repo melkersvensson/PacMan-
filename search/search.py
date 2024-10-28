@@ -16,6 +16,11 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in search_agents.py).
 """
+"""
+The `problem` parameter in the search methods (dfs, bfs, etc.) is an instance of the `SearchProblem` class.
+This class outlines the structure of a search problem, but doesn't implement any of the methods.
+You will need to use the methods of this class to interact with the search problem.
+"""
 import util
 
 class SearchProblem:
@@ -131,20 +136,74 @@ def depth_first_search(problem):
     print("Start:", problem.get_start_state())
     print("Is the start a goal?", problem.is_goal_state(problem.get_start_state()))
     print("Start's successors:", problem.get_successors(problem.get_start_state()))
+
+    result: 
+    Start: A
+    Is the start a goal? False
+    Start's successors: [('B', '0:A->B', 1.0), ('C', '1:A->C', 2.0), ('D', '2:A->D', 4.0)]
     """
+    print("Start:", problem.get_start_state())
+    print("Is the start a goal?", problem.is_goal_state(problem.get_start_state()))
+    print("Start's successors:", problem.get_successors(problem.get_start_state()))
     "*** YOUR CODE HERE ***"
-    util.raise_not_defined()
+    # Create a stack to store the nodes to be visited
+    stack = util.Stack()
+    visited = set()
+    start_node = SearchNode(None, (problem.get_start_state(), None, 0))
+    stack.push(start_node)
+
+    while not stack.is_empty():
+        current_node = stack.pop()
+        
+        if current_node.state in visited:
+            continue  # Skip if already visited
+        
+        if problem.is_goal_state(current_node.state):
+            return current_node.get_path()
+        
+        visited.add(current_node.state)  # Mark the current node as visited
+
+        for successor in problem.get_successors(current_node.state):
+            stack.push(SearchNode(current_node, successor))
+
+    return []
 
 
 
 def breadth_first_search(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raise_not_defined()
+    # Create a queue to store the nodes to be visited
+    queue = util.Queue()
+    visited = set()
+    queue.push(SearchNode(None, (problem.get_start_state(), None, 0)))
+    while not queue.is_empty():
+        current_node = queue.pop()
+        if problem.is_goal_state(current_node.state):
+            return current_node.get_path()
+        if current_node.state not in visited:
+            visited.add(current_node.state)
+            for successor in problem.get_successors(current_node.state):
+                queue.push(SearchNode(current_node, successor))
+    return []
 
 def uniform_cost_search(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    # we implement dijkstra's algorithm as UCS
+    # Create a priority queue to store the nodes to be visited
+    pq = util.PriorityQueue()
+    visited = set()
+    pq.push(SearchNode(None, (problem.get_start_state(), None, 0)), 0)
+    while not pq.is_empty():
+        current_node = pq.pop()
+        if problem.is_goal_state(current_node.state):
+            return current_node.get_path()
+        if current_node.state not in visited:
+            visited.add(current_node.state)
+            for successor in problem.get_successors(current_node.state):
+                pq.push(SearchNode(current_node, successor), current_node.cost + successor[2])
+    return []
     util.raise_not_defined()
 
 def null_heuristic(state, problem=None):
@@ -152,11 +211,23 @@ def null_heuristic(state, problem=None):
     A heuristic function estimates the cost from the current state to the nearest
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
+
     return 0
 
 def a_star_search(problem, heuristic=null_heuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    pq = util.PriorityQueue()
+    visited = set()
+    pq.push(SearchNode(None, (problem.get_start_state(), None, 0)), 0)
+    while not pq.is_empty():
+        current_node = pq.pop()
+        if problem.is_goal_state(current_node.state):
+            return current_node.get_path()
+        if current_node.state not in visited:
+            visited.add(current_node.state)
+            for successor in problem.get_successors(current_node.state):
+                pq.push(SearchNode(current_node, successor), current_node.cost + successor[2] + heuristic(successor[0], problem))
     util.raise_not_defined()
 
 # Abbreviations
