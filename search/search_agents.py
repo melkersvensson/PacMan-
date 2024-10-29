@@ -301,14 +301,16 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.startingPosition, self.corners
 
     def is_goal_state(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        _, remaining_corners = state
+        return len(remaining_corners) == 0
+
 
     def get_successors(self, state):
         """
@@ -321,19 +323,21 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that successor
         """
         successors = []
+        position, remaining_corners = state
+        x, y = position
+
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   current_position = state[0]
-            #   x,y = current_position
-            #   dx, dy = Actions.direction_to_vector(action)
-            #   next_x, next_y = int(x + dx), int(y + dy)
-            #   hits_wall = self.walls[next_x][next_y]
+            dx, dy = Actions.direction_to_vector(action)
+            next_x, next_y = int(x + dx), int(y + dy)
+            if not self.walls[next_x][next_y]:
+                new_position = (next_x, next_y)
+                new_remaining_corners = tuple(c for c in remaining_corners if c != new_position)
+                successors.append(((new_position, new_remaining_corners), action, 1))
 
-            "*** YOUR CODE HERE ***"
-
-        self._expanded += 1 # DO NOT CHANGE
+        self._expanded += 1  # For display purposes only
         return successors
+
+
 
     def get_cost_of_actions(self, actions):
         """
@@ -376,11 +380,18 @@ def corners_heuristic(state, problem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    position, remaining_corners = state
+    remaining_corners = list(remaining_corners)
+    total_distance = 0
 
-    "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    while remaining_corners:
+        distances = [(util.manhattan_distance(position, corner), corner) for corner in remaining_corners]
+        min_distance, nearest_corner = min(distances)
+        total_distance += min_distance
+        position = nearest_corner
+        remaining_corners.remove(nearest_corner)
+
+    return total_distance
 
 class AStarCornersAgent(SearchAgent):
     """A SearchAgent for FoodSearchProblem using A* and your food_heuristic"""

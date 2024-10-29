@@ -124,29 +124,7 @@ class SearchNode:
     # #     return hash(self.__state)
 
 def depth_first_search(problem):
-    """
-    Search the deepest nodes in the search tree first.
-
-    Your search algorithm needs to return a list of actions that reaches the
-    goal. Make sure to implement a graph search algorithm.
-
-    To get started, you might want to try some of these simple commands to
-    understand the search problem that is being passed in:
-
-    print("Start:", problem.get_start_state())
-    print("Is the start a goal?", problem.is_goal_state(problem.get_start_state()))
-    print("Start's successors:", problem.get_successors(problem.get_start_state()))
-
-    result: 
-    Start: A
-    Is the start a goal? False
-    Start's successors: [('B', '0:A->B', 1.0), ('C', '1:A->C', 2.0), ('D', '2:A->D', 4.0)]
-    """
-    print("Start:", problem.get_start_state())
-    print("Is the start a goal?", problem.is_goal_state(problem.get_start_state()))
-    print("Start's successors:", problem.get_successors(problem.get_start_state()))
-    "*** YOUR CODE HERE ***"
-    # Create a stack to store the nodes to be visited
+    # Initialize the stack with the start node
     stack = util.Stack()
     visited = set()
     start_node = SearchNode(None, (problem.get_start_state(), None, 0))
@@ -155,18 +133,22 @@ def depth_first_search(problem):
     while not stack.is_empty():
         current_node = stack.pop()
         
-        if current_node.state in visited:
-            continue  # Skip if already visited
-        
+        # Goal check
         if problem.is_goal_state(current_node.state):
             return current_node.get_path()
         
-        visited.add(current_node.state)  # Mark the current node as visited
+        # Mark the node as visited
+        if current_node.state not in visited:
+            visited.add(current_node.state)
 
-        for successor in problem.get_successors(current_node.state):
-            stack.push(SearchNode(current_node, successor))
-
+            # Push successors onto the stack if they haven't been visited
+            for successor in problem.get_successors(current_node.state):
+                successor_state = successor[0]  # Get the state portion of successor
+                if successor_state not in visited:
+                    stack.push(SearchNode(current_node, successor))
     return []
+
+
 
 
 
