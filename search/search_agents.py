@@ -513,7 +513,7 @@ def power_set(iterable):
     s = list(iterable)
     return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
 
-def food_heuristic_advanced(state, problem):
+def food_heuristic_advanced_easy(state, problem):
     """
     Your heuristic for the FoodSearchProblem goes here.
 
@@ -554,6 +554,25 @@ def food_heuristic_advanced(state, problem):
 
 from util import manhattan_distance
 
+def food_heuristic(state, problem):
+    position, food_grid = state
+    food_positions = food_grid.as_list()
+    
+    # If no food remains, the heuristic cost is 0
+    if not food_positions:
+        return 0
+
+    # Calculate the distance to the nearest food
+    nearest_food_dist = min(util.manhattan_distance(position, food) for food in food_positions)
+
+    # Find the food position farthest from the nearest food
+    nearest_food = min(food_positions, key=lambda food: util.manhattan_distance(position, food))
+    farthest_food_dist = max(util.manhattan_distance(nearest_food, food) for food in food_positions)
+
+    # Combine the nearest and farthest distances
+    return nearest_food_dist + farthest_food_dist
+
+
 def mst_cost(points):
     # Calculate MST cost using a simplified Prim's algorithm
     if not points:
@@ -574,7 +593,7 @@ def mst_cost(points):
         visited.add(next_point)
     return mst_cost
 
-def food_heuristic(state, problem):
+def food_heuristic_advanced(state, problem):
     position, food_grid = state
     food_positions = food_grid.as_list()
     if not food_positions:
