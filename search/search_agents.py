@@ -513,7 +513,7 @@ def power_set(iterable):
     s = list(iterable)
     return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
 
-def food_heuristic(state, problem):
+def food_heuristic_advanced(state, problem):
     """
     Your heuristic for the FoodSearchProblem goes here.
 
@@ -521,7 +521,7 @@ def food_heuristic(state, problem):
     up with an admissible heuristic; almost all admissible heuristics will be
     consistent as well.
 
-    If using A* ever finds a solution that is worse uniform cost search finds,
+    If using A* ever finds a solution that is worse than uniform cost search finds,
     your heuristic is *not* consistent, and probably not admissible!  On the
     other hand, inadmissible or inconsistent heuristics may find optimal
     solutions, so be careful.
@@ -542,8 +542,50 @@ def food_heuristic(state, problem):
     problem.heuristic_info['wallCount']
     """
     position, food_grid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    food_positions = food_grid.as_list()
+
+    # If no food remains, the heuristic cost is 0
+    if not food_positions:
+        return 0
+
+    # Calculate the Manhattan distance to the farthest food pellet
+    max_distance = max(util.manhattan_distance(position, food) for food in food_positions)
+    return max_distance
+
+from util import manhattan_distance
+
+def mst_cost(points):
+    # Calculate MST cost using a simplified Prim's algorithm
+    if not points:
+        return 0
+    start = points[0]
+    mst_cost = 0
+    visited = set([start])
+    while len(visited) < len(points):
+        min_edge = float("inf")
+        for p1 in visited:
+            for p2 in points:
+                if p2 not in visited:
+                    distance = manhattan_distance(p1, p2)
+                    if distance < min_edge:
+                        min_edge = distance
+                        next_point = p2
+        mst_cost += min_edge
+        visited.add(next_point)
+    return mst_cost
+
+def food_heuristic(state, problem):
+    position, food_grid = state
+    food_positions = food_grid.as_list()
+    if not food_positions:
+        return 0
+
+    # Nearest food distance to ensure consistency
+    nearest_food_dist = min(manhattan_distance(position, food) for food in food_positions)*0.05
+    
+    # MST of all food positions including Pacman's position
+    points = [position] + food_positions
+    return nearest_food_dist + mst_cost(points)
 
 
 def simplified_corners_heuristic(state, problem):
