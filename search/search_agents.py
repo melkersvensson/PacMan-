@@ -513,7 +513,7 @@ def power_set(iterable):
     s = list(iterable)
     return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
 
-def food_heuristic_advanced_easy(state, problem):
+def food_heuristic(state, problem):
     """
     Your heuristic for the FoodSearchProblem goes here.
 
@@ -543,20 +543,6 @@ def food_heuristic_advanced_easy(state, problem):
     """
     position, food_grid = state
     food_positions = food_grid.as_list()
-
-    # If no food remains, the heuristic cost is 0
-    if not food_positions:
-        return 0
-
-    # Calculate the Manhattan distance to the farthest food pellet
-    max_distance = max(util.manhattan_distance(position, food) for food in food_positions)
-    return max_distance
-
-from util import manhattan_distance
-
-def food_heuristic(state, problem):
-    position, food_grid = state
-    food_positions = food_grid.as_list()
     
     # If no food remains, the heuristic cost is 0
     if not food_positions:
@@ -571,40 +557,21 @@ def food_heuristic(state, problem):
 
     # Combine the nearest and farthest distances
     return nearest_food_dist + farthest_food_dist
+    
 
 
-def mst_cost(points):
-    # Calculate MST cost using a simplified Prim's algorithm
-    if not points:
-        return 0
-    start = points[0]
-    mst_cost = 0
-    visited = set([start])
-    while len(visited) < len(points):
-        min_edge = float("inf")
-        for p1 in visited:
-            for p2 in points:
-                if p2 not in visited:
-                    distance = manhattan_distance(p1, p2)
-                    if distance < min_edge:
-                        min_edge = distance
-                        next_point = p2
-        mst_cost += min_edge
-        visited.add(next_point)
-    return mst_cost
-
-def food_heuristic_advanced(state, problem):
+def food_heuristic_simple(state, problem):
     position, food_grid = state
     food_positions = food_grid.as_list()
+
+    # If no food remains, the heuristic cost is 0
     if not food_positions:
         return 0
 
-    # Nearest food distance to ensure consistency
-    nearest_food_dist = min(manhattan_distance(position, food) for food in food_positions)*0.05
-    
-    # MST of all food positions including Pacman's position
-    points = [position] + food_positions
-    return nearest_food_dist + mst_cost(points)
+    # Calculate the Manhattan distance to the farthest food pellet
+    max_distance = max(util.manhattan_distance(position, food) for food in food_positions)
+    return max_distance
+
 
 
 def simplified_corners_heuristic(state, problem):

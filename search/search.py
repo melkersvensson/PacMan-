@@ -186,7 +186,7 @@ def uniform_cost_search(problem):
             for successor in problem.get_successors(current_node.state):
                 pq.push(SearchNode(current_node, successor), current_node.cost + successor[2])
     return []
-    util.raise_not_defined()
+
 
 def null_heuristic(state, problem=None):
     """
@@ -210,7 +210,7 @@ def a_star_search(problem, heuristic=null_heuristic):
             visited.add(current_node.state)
             for successor in problem.get_successors(current_node.state):
                 pq.push(SearchNode(current_node, successor), current_node.cost + successor[2] + heuristic(successor[0], problem))
-    util.raise_not_defined()
+    return []
 
 # Abbreviations
 bfs = breadth_first_search
