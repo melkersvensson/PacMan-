@@ -541,25 +541,57 @@ def food_heuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristic_info['wallCount']
     """
-    position, food_grid = state
-    food_positions = food_grid.as_list()
-    
-    # If no food remains, the heuristic cost is 0
+    # Admissibility
+    # Def: A heuristic is admisible if it never overestmates the cost to reach the goal for every node.]
+    # The heuristic calculates the sum of the Manhattan distance to the nearest food and the Manhattan distance from the nearest food to the farthest food.
+#
+    # Nearest Food Distance (NFD): 
+    # The Manhattan distance to the nearest food is always a lower bound on the actual cost to reach any food 
+    # because it represents the shortest possible path in a grid.
+
+    # Farthest Food Distance (FFD): 
+    # The distance from the nearest food to the farthest food is also a lower bound on the cost to collct all food 
+    # because it represents the longest distance between any two food items.
+    # Since both compoents of the heuristic are lower bounds on their respective parts of the problem, 
+    # their sum is also a lower bound on the total cost to collect all food. Therefore, the heuristic is admissible.
+
+
+    # Consistency
+    # Def: A heuristic is consisent if the estmated cost from node A to the goal node, 
+    #      is less than or equal to the cost of reaching node B from A plus the estimated cost from node B to the goal.
+
+    # NFD: 
+    # Moving from (n) to (n') will chang the position, 
+    # but the Manhttan distance to the nearest food will either decrease or stay the same. 
+    # Thrfore, the huristic value for the nearest food distance will not increase.
+
+    # FFD: 
+    # The distance from the nearest food to the farthest food will also not increase as you move closer to the food items.
+
+    # Since both components of the heuristic (NFD & FFD) are not increasing as you move from (n) to (n'), 
+    # the sum of these components will also be non-increasing. Therefore, the heuristic is consistent.
+
+
+
+    position, food_grid = state # Take apart the state tuple
+    food_positions = food_grid.as_list() # Get the list of food positions as coordinates
+     
+    # If no food remains, the heuristic cost is 0, i.e. we are at the goal state, so the cost is 0
     if not food_positions:
         return 0
 
-    # Calculate the distance to the nearest food
+    # Calculates the distance to the nearest food
     nearest_food_dist = min(util.manhattan_distance(position, food) for food in food_positions)
 
-    # Find the food position farthest from the nearest food
-    nearest_food = min(food_positions, key=lambda food: util.manhattan_distance(position, food))
+    # Finds the food position farthest from the nearest food and calculates the distance
+    nearest_food = min(food_positions, key=lambda food: util.manhattan_distance(position, food))  # Fancy lambda function, could create helper func instead
     farthest_food_dist = max(util.manhattan_distance(nearest_food, food) for food in food_positions)
 
     # Combine the nearest and farthest distances
     return nearest_food_dist + farthest_food_dist
     
 
-
+# IGNORE THIS FUNCTION
 def food_heuristic_simple(state, problem):
     position, food_grid = state
     food_positions = food_grid.as_list()
