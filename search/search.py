@@ -124,26 +124,29 @@ class SearchNode:
     # #     return hash(self.__state)
 
 def depth_first_search(problem):
-    # Initialize the stack with the start node
+    # Create stack to store nodes to be visited
     stack = util.Stack()
     visited = set()
+
+    # Push start node onto stack
     start_node = SearchNode(None, (problem.get_start_state(), None, 0))
     stack.push(start_node)
 
     while not stack.is_empty():
         current_node = stack.pop()
         
-        # Goal check
+        # Check if current node is goal state
         if problem.is_goal_state(current_node.state):
             return current_node.get_path()
         
-        # Mark the node as visited
+        # Mark current node as visited
         if current_node.state not in visited:
             visited.add(current_node.state)
 
             # Push successors onto the stack if they haven't been visited
             for successor in problem.get_successors(current_node.state):
                 successor_state = successor[0]  # Get the state portion of successor
+                
                 if successor_state not in visited:
                     stack.push(SearchNode(current_node, successor))
     return []
@@ -155,16 +158,26 @@ def depth_first_search(problem):
 def breadth_first_search(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    # Create a queue to store the nodes to be visited
+    # Create queue to store nodes to be visited
     queue = util.Queue()
     visited = set()
+    
+    # Push start node onto queue
     queue.push(SearchNode(None, (problem.get_start_state(), None, 0)))
+    
     while not queue.is_empty():
+        # Pop node from front of queue
         current_node = queue.pop()
+        
+        # Check if current node is goal state
         if problem.is_goal_state(current_node.state):
             return current_node.get_path()
+        
         if current_node.state not in visited:
+            # Mark current node as visited
             visited.add(current_node.state)
+            
+            # Push all successors of current node onto the queue
             for successor in problem.get_successors(current_node.state):
                 queue.push(SearchNode(current_node, successor))
     return []
@@ -173,18 +186,29 @@ def uniform_cost_search(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     # we implement dijkstra's algorithm as UCS
-    # Create a priority queue to store the nodes to be visited
+    # Create a priority queue to store nodes to be visited
     pq = util.PriorityQueue()
     visited = set()
+    
+    # Push start node onto priority queue with priority 0
     pq.push(SearchNode(None, (problem.get_start_state(), None, 0)), 0)
+    
     while not pq.is_empty():
+        # Pop node with lowest cost from priority queue
         current_node = pq.pop()
+        
+        # Check if current node is goal state
         if problem.is_goal_state(current_node.state):
             return current_node.get_path()
+        
         if current_node.state not in visited:
+            # Mark current node as visited
             visited.add(current_node.state)
+            
+            # Push all successors of current node onto priority queue
             for successor in problem.get_successors(current_node.state):
                 pq.push(SearchNode(current_node, successor), current_node.cost + successor[2])
+    
     return []
 
 
@@ -199,17 +223,29 @@ def null_heuristic(state, problem=None):
 def a_star_search(problem, heuristic=null_heuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    # Create a priority queue to store nodes to be visited
     pq = util.PriorityQueue()
     visited = set()
+    
+    # Push start node onto priority queue with priority 0
     pq.push(SearchNode(None, (problem.get_start_state(), None, 0)), 0)
+    
     while not pq.is_empty():
+        # Pop node with lowest cost from priority queue
         current_node = pq.pop()
+        
+        # Check if current node is goal state
         if problem.is_goal_state(current_node.state):
             return current_node.get_path()
+        
         if current_node.state not in visited:
+            # Mark current node as visited
             visited.add(current_node.state)
+            
+            # Push all successors of current node onto priority queue with updated priority
             for successor in problem.get_successors(current_node.state):
                 pq.push(SearchNode(current_node, successor), current_node.cost + successor[2] + heuristic(successor[0], problem))
+    
     return []
 
 # Abbreviations
